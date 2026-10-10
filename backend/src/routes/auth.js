@@ -2,9 +2,18 @@ const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Business = require('../models/Business');
+const auth = require('../middleware/auth');
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function tokenFor(business) { return jwt.sign({}, process.env.JWT_SECRET, { subject: business._id.toString(), expiresIn: process.env.JWT_EXPIRES_IN || '1d', algorithm: 'HS256' }); }
+router.get('/me', auth, async (req, res, next) => {
+  try {
+    const business = await Business.findById(req.businessId).select('name ownerName email').lean();
+    if (!business) return res.status(404).json({ error: 'Account not found' });
+    res.json({ business: { id: req.businessId, name: business.name, ownerName: business.ownerName, email: business.email } });
+  } catch (err) { next(err); }
+});
+
 router.post('/register', async (req, res, next) => {
   try {
     const { businessName, ownerName, email, password } = req.body || {};
