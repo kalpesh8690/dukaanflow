@@ -3,7 +3,7 @@ import {
   ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Platform, Pressable,
   SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, View,
 } from 'react-native';
-import { Business, Product, createProduct, getToken, listProducts, register, signIn, signOut } from './src/api';
+import { Business, Product, createProduct, getToken, listProducts, currentBusiness, register, signIn, signOut } from './src/api';
 
 type Mode = 'login' | 'register';
 
@@ -40,12 +40,11 @@ export default function App() {
       try {
         const savedToken = await getToken();
         if (!savedToken) return;
-        const result = await listProducts(savedToken);
+        const [account, inventory] = await Promise.all([currentBusiness(savedToken), listProducts(savedToken)]);
         if (mounted) {
           setToken(savedToken);
-          setProducts(result.products);
-          // The API currently doesn't expose a profile endpoint; show the signed-in workspace.
-          setBusiness({ id: '', name: 'My shop', ownerName: '', email: '' });
+          setProducts(inventory.products);
+          setBusiness(account);
         }
       } catch {
         await signOut();
