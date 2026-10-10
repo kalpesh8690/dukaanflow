@@ -4,10 +4,12 @@ This guide prepares the project for a free-tier test deployment. Free hosting ma
 
 ## 1. Create MongoDB Atlas database
 
+**Security:** Never paste a live MongoDB connection string into chat, commit it to Git, or put it in mobile app code. If credentials have been shared accidentally, rotate the database user's password in Atlas immediately, then update the `MONGODB_URI` environment variable in your hosting provider. Store secrets only in the hosting environment or a local `.env` file excluded by `.gitignore`.
+
 1. Create a MongoDB Atlas account and a free shared cluster if available in your region.
 2. Create a dedicated database user with a strong unique password; do not use your Atlas account password.
 3. In Network Access, allow the deployed API to reach the cluster. For a prototype on hosting without stable outbound IPs, you may need a broader IP rule; use this only with a strong database password and least-privilege database user, and tighten access when possible.
-4. Copy the Atlas connection string and replace the username, password, and database name. Keep it private.
+4. Copy the Atlas connection string and set a database name such as `dukaanflow` in the URI path (before the `?` query string). Replace the username and password placeholders. Keep the full URI private.
 
 ## 2. Deploy the API on Render
 
