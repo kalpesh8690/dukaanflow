@@ -21,3 +21,11 @@ A mobile-first shop management app for small shops and home businesses.
 ## Development status
 
 Repository scaffold is being set up. The README describes the intended architecture; features should be treated as incomplete until implemented and tested.
+
+## Setup and deployment
+
+- [Deployment guide](DEPLOYMENT.md) — MongoDB Atlas, Render API deployment, and Android APK build steps.
+- [Backend setup and API routes](backend/README.md)
+- [Mobile app](mobile/)
+
+The code is an early MVP scaffold. Complete integration tests, deploy it, and test on a physical device before using it with real business data.
