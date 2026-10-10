@@ -42,12 +42,17 @@ export async function register(input: { businessName: string; ownerName: string;
   return result.business;
 }
 
+export async function currentBusiness(token: string) {
+  const result = await request<{ business: Business }>('/auth/me', {}, token);
+  return result.business;
+}
+
 export async function restoreSession() {
   const token = await SecureStore.getItemAsync(TOKEN_KEY);
   if (!token) return null;
   try {
-    const result = await request<{ products: Product[] }>('/products', {}, token);
-    return { token, products: result.products };
+    const [account, inventory] = await Promise.all([currentBusiness(token), listProducts(token)]);
+    return { token, business: account, products: inventory.products };
   } catch {
     await SecureStore.deleteItemAsync(TOKEN_KEY);
     return null;
